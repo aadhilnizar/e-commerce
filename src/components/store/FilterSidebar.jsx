@@ -22,6 +22,8 @@ export function FilterSidebar({
   selectedCategory,
   onCategoryChange,
   maxPrice,
+  priceMin,
+  onPriceMinChange,
   priceMax,
   onPriceMaxChange,
   minRating,
@@ -54,15 +56,16 @@ export function FilterSidebar({
             Price Range
           </Title>
           <Slider
+            range
             min={0}
             max={maxPrice}
             step={0.01}
-            value={priceMax}
-            onChange={onPriceMaxChange}
+            value={[priceMin, priceMax]}
+            onChange={([min, max]) => { onPriceMinChange(min); onPriceMaxChange(max) }}
             tooltip={{ formatter: v => `$${v.toFixed(2)}` }}
           />
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
-            <Text type="secondary" style={{ fontSize: 11 }}>$0</Text>
+            <Text type="secondary" style={{ fontSize: 11 }}>${priceMin.toFixed(2)}</Text>
             <Text type="secondary" style={{ fontSize: 11 }}>${priceMax.toFixed(2)}</Text>
           </div>
         </div>

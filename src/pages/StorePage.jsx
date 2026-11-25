@@ -41,6 +41,7 @@ function StorePage() {
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('all')
   const [sortBy, setSortBy] = useState('default')
+  const [priceMin, setPriceMin] = useState(0)
   const [priceMax, setPriceMax] = useState(null)
   const [minRating, setMinRating] = useState(0)
   const [viewMode, setViewMode] = useState('grid')
@@ -71,6 +72,9 @@ function StorePage() {
     if (category !== 'all') {
       list = list.filter(p => p.category === category)
     }
+    if (priceMin > 0) {
+      list = list.filter(p => p.price >= priceMin)
+    }
     if (effectivePriceMax > 0) {
       list = list.filter(p => p.price <= effectivePriceMax)
     }
@@ -86,14 +90,14 @@ function StorePage() {
     }
 
     return list
-  }, [products, search, category, sortBy, effectivePriceMax, minRating])
+  }, [products, search, category, sortBy, priceMin, effectivePriceMax, minRating])
 
   const totalItems = filtered.length
   const paginated = filtered.slice((page - 1) * PRODUCTS_PER_PAGE, page * PRODUCTS_PER_PAGE)
 
   const handleSearch = (value) => { setSearch(value); setPage(1) }
   const handleCategory = (cat) => { setCategory(cat); setPage(1) }
-  const clearFilters = () => { setSearch(''); setCategory('all'); setMinRating(0); setPage(1) }
+  const clearFilters = () => { setSearch(''); setCategory('all'); setPriceMin(0); setPriceMax(null); setMinRating(0); setPage(1) }
 
   return (
     <main className="store-page">
@@ -106,6 +110,8 @@ function StorePage() {
           selectedCategory={category}
           onCategoryChange={handleCategory}
           maxPrice={Math.ceil(computedMaxPrice) || 1000}
+          priceMin={priceMin}
+          onPriceMinChange={v => { setPriceMin(v); setPage(1) }}
           priceMax={effectivePriceMax || 0}
           onPriceMaxChange={v => { setPriceMax(v); setPage(1) }}
           minRating={minRating}
